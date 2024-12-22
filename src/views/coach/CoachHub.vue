@@ -1,132 +1,166 @@
 <template>
-	<div style="text-align: center;">
+	<div class="coach-hub">
+		<div class="page-header">
+			<h2>个人信息管理</h2>
+			<div class="header-line"></div>
+		</div>
 
-		<el-row>
-			<el-col :span="24">
-				<div class="grid-content bg-purple-dark">
-					<label>教练信息修改</label>
-				</div>
-			</el-col>
-		</el-row>
+		<div class="form-container">
+			<!-- 基本信息部分 -->
+			<div class="section-card">
+				<h3 class="section-title">
+					<i class="el-icon-user"></i>
+					基本信息
+				</h3>
+				<el-row :gutter="20">
+					<el-col :span="8">
+						<div class="form-item">
+							<label>用户名</label>
+							<el-input v-model="coach.username" :readonly="true"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="form-item">
+							<label>性别</label>
+							<div class="gender-buttons">
+								<el-button :type="coach.sex === 1 ? 'primary' : ''" @click="setSex(1)">男</el-button>
+								<el-button :type="coach.sex === 0 ? 'primary' : ''" @click="setSex(0)">女</el-button>
+							</div>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="form-item">
+							<label>电话</label>
+							<el-input @blur="CheckTel()" v-model="coach.tel"></el-input>
+						</div>
+					</el-col>
+				</el-row>
 
-		<el-row>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>用户名</label>
-					<el-input class="userHubInput" v-model="coach.username" :readonly="true"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple-light">
-					<label>性别</label><br>
-					<el-button style="width: 120px;" :type="coach.sex === 1 ? 'primary' : ''" @click="setSex(1)">
-						男
-					</el-button>
-					<el-button style="width: 120px;" :type="coach.sex === 0 ? 'primary' : ''" @click="setSex(0)">
-						女
-					</el-button>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>电话</label>
-					<el-input class="userHubInput" @blur="CheckTel()" v-model="coach.tel"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+				<el-row :gutter="20">
+					<el-col :span="8">
+						<div class="form-item">
+							<label>真实姓名</label>
+							<el-input @blur="CheckName()" v-model="coach.name"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="form-item">
+							<label>出生日期</label>
+							<el-date-picker
+								v-model="coach.birthday"
+								type="date"
+								placeholder="选择日期"
+								@blur="CheckBirthday()">
+							</el-date-picker>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="form-item">
+							<label>年龄</label>
+							<el-input :readonly="true" v-model="coach.age"></el-input>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-row>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>真实姓名</label>
-					<el-input class="userHubInput" @blur="CheckName()" v-model="coach.name"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple-light">
-					<div class="block">
-						<label>出生日期</label><br>
-						<el-date-picker style="margin-top: 7px;width: 350px;" @blur="CheckBirthday()"
-							v-model="coach.birthday" type="date" placeholder="选择日期">
-						</el-date-picker>
-					</div>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>年龄</label>
-					<el-input class="userHubInput" :readonly="true" v-model="coach.age"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+			<!-- 身体数据部分 -->
+			<div class="section-card">
+				<h3 class="section-title">
+					<i class="el-icon-data-line"></i>
+					身体数据
+				</h3>
+				<el-row :gutter="20">
+					<el-col :span="6">
+						<div class="form-item">
+							<label>身高(m)</label>
+							<el-input @blur="CheckHeight()" v-model="coach.height"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="6">
+						<div class="form-item">
+							<label>体重(斤)</label>
+							<el-input @blur="CheckWeight()" v-model="coach.weight"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="6">
+						<div class="form-item">
+							<label>BMI</label>
+							<el-input v-model="coach.bmi" :readonly="true"></el-input>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-row>
-			<el-col :span="5">
-				<div class="grid-content bg-purple">
-					<label>身高(m)</label>
-					<el-input class="userHubInput" @blur="CheckHeight()" v-model="coach.height"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="5">
-				<div class="grid-content bg-purple-light">
-					<label>体重(斤)</label>
-					<el-input class="userHubInput" @blur="CheckWeight()" v-model="coach.weight"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="5">
-				<div class="grid-content bg-purple">
-					<label>BMI</label>
-					<el-input class="userHubInput" v-model="coach.bmi" :readonly="true"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="5">
-				<div class="grid-content bg-purple-light">
-					<label>专业领域</label>
-					<el-input class="userHubInput" @blur="CheckProfessionalField()"
-						v-model="coach.professionalfield"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="4">
-				<div class="grid-content bg-purple">
-					<label>证书</label>
-					<el-input class="userHubInput" @blur="CheckCertificate()" v-model="coach.certificate"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+			<!-- 专业信息部分 -->
+			<div class="section-card">
+				<h3 class="section-title">
+					<i class="el-icon-medal"></i>
+					专业信息
+				</h3>
+				<el-row :gutter="20">
+					<el-col :span="8">
+						<div class="form-item">
+							<label>专业领域</label>
+							<el-input @blur="CheckProfessionalField()" v-model="coach.professionalfield"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="form-item">
+							<label>证书</label>
+							<el-input @blur="CheckCertificate()" v-model="coach.certificate"></el-input>
+						</div>
+					</el-col>
+				</el-row>
 
-		<el-row>
-			<el-col :span="12">
-				<div class="grid-content bg-purple">
-					<label>简介</label>
-					<el-input class="userHubInput" @blur="CheckIntroduction()" v-model="coach.introduction"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="12">
-				<div class="grid-content bg-purple-light">
-					<label style="text-align: center;">工作经验</label>
-					<el-input class="userHubInput" @blur="CheckWorkExperience()"
-						v-model="coach.workexperience"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<div class="form-item">
+							<label>简介</label>
+							<el-input type="textarea" rows="3" @blur="CheckIntroduction()" v-model="coach.introduction"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="12">
+						<div class="form-item">
+							<label>工作经验</label>
+							<el-input type="textarea" rows="3" @blur="CheckWorkExperience()" v-model="coach.workexperience"></el-input>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-row>
-			<el-col :span="12">
-				<div class="grid-content bg-purple">
-					<label>注册时间</label>
-					<el-input class="userHubInput" :readonly="true" v-model="enrolldate"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="12">
-				<div class="grid-content bg-purple-light">
-					<label style="text-align: center;">上一次登录时间</label>
-					<el-input class="userHubInput" :readonly="true" v-model="lastlogindate"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+			<!-- 账户信息部分 -->
+			<div class="section-card">
+				<h3 class="section-title">
+					<i class="el-icon-time"></i>
+					账户信息
+				</h3>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<div class="form-item">
+							<label>注册时间</label>
+							<el-input :readonly="true" v-model="enrolldate"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="12">
+						<div class="form-item">
+							<label>上一次登录时间</label>
+							<el-input :readonly="true" v-model="lastlogindate"></el-input>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-button style="width: 120px;" @click="updateCoach()" :disabled="!coachShow" type="success">修改</el-button>
-
+			<!-- 提交按钮 -->
+			<div class="submit-section">
+				<el-button 
+					type="primary" 
+					:disabled="!coachShow"
+					@click="updateCoach()"
+					icon="el-icon-check">
+					保存修改
+				</el-button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -253,7 +287,7 @@
 				if (this.coach.height !== '') {
 					const isNumeric = /^[0-9]+$/.test(this.coach.height);
 					if (!isNumeric || this.coach.height < 60 || this.coach.height > 250) {
-						this.Hint('请您输入正确的身高,不要太离谱!');
+						this.Hint('请您输入正确的身高,不要太离��!');
 						this.coach.height = '';
 						return false;
 					}
@@ -312,54 +346,107 @@
 	}
 </script>
 
-<style scoped>
-	.el-row {
-		margin-bottom: 20px;
+<style lang="less" scoped>
+.coach-hub {
+	padding: 20px;
+	background-color: #f5f7fa;
+	min-height: calc(100vh - 120px);
+}
 
-		&:last-child {
-			margin-bottom: 0;
+.page-header {
+	text-align: center;
+	margin-bottom: 30px;
+
+	h2 {
+		color: #303133;
+		font-size: 24px;
+		margin-bottom: 10px;
+	}
+
+	.header-line {
+		width: 50px;
+		height: 3px;
+		background: #409EFF;
+		margin: 0 auto;
+	}
+}
+
+.form-container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.section-card {
+	background: #fff;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+
+	.section-title {
+		color: #303133;
+		font-size: 18px;
+		margin-bottom: 20px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		i {
+			color: #409EFF;
 		}
 	}
+}
 
+.form-item {
+	margin-bottom: 20px;
+
+	label {
+		display: block;
+		color: #606266;
+		margin-bottom: 8px;
+		font-weight: 500;
+	}
+
+	.el-input, .el-date-picker {
+		width: 100%;
+	}
+
+	.el-textarea {
+		font-size: 14px;
+	}
+}
+
+.gender-buttons {
+	display: flex;
+	gap: 10px;
+
+	.el-button {
+		flex: 1;
+	}
+}
+
+.submit-section {
+	text-align: center;
+	margin-top: 30px;
+
+	.el-button {
+		padding: 12px 40px;
+		font-size: 16px;
+	}
+}
+
+/* 响应式布局 */
+@media screen and (max-width: 768px) {
 	.el-col {
-		border-radius: 4px;
+		width: 100% !important;
 	}
 
-	.bg-purple-dark {
-		padding-top: 20px;
-		;
-		text-align: center;
-		height: 70px;
-		background: #99a9bf;
+	.section-card {
+		padding: 15px;
 	}
 
-	.userHubInput {
-		margin-top: 7px;
+	.form-item {
+		margin-bottom: 15px;
 	}
-
-	.bg-purple {
-		padding-top: 5px;
-		text-align: center;
-		margin-left: 5px;
-		height: 70px;
-		background: #d3dce6;
-	}
-
-	.bg-purple-light {
-		padding-top: 5px;
-		text-align: center;
-		margin-left: 5px;
-		height: 70px;
-		background: #e5e9f2;
-	}
-
-	.grid-content {
-		border-radius: 4px;
-		min-height: 36px;
-	}
-
-	.row-bg {
-		padding: 10px 0;
-		background-color: #f9fafc;
-	}
+}
 </style>
