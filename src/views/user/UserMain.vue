@@ -35,23 +35,30 @@
 
 <style scoped>
 	.user-main {
-		width: 100%;
+		width: 100vw;
 		height: 100vh;
 		background-color: #f0f2f5;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
 	}
 
 	.container {
 		height: 100%;
+		width: 100%;
 	}
 
 	.aside {
 		box-shadow: 2px 0 6px rgba(0, 21, 41, 0.12);
 		z-index: 999;
+		height: 100vh;
 	}
 
 	.right-container {
 		display: flex;
 		flex-direction: column;
+		height: 100vh;
+		width: 100%;
 	}
 
 	.header {
@@ -63,5 +70,8 @@
 	.main {
 		padding: 20px;
 		background: #f0f2f5;
+		flex: 1;
+		overflow-y: auto;
+		height: calc(100vh - 60px);
 	}
 </style>

@@ -211,6 +211,9 @@ export default {
 	align-items: center;
 	background-color: #f5f7fa;
 	position: relative;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
 }
 
 .login-background {
