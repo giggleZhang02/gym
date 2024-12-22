@@ -56,9 +56,29 @@
 						</el-input>
 					</el-form-item>
 
-					<el-form-item class="verification-group">
-						<el-image class="verification-img" :src="imageURL" @click="ChangeVerification()" fit="cover"></el-image>
-						<el-input v-model="securityCode" @blur="VerificationCode()" placeholder="请输入验证码"></el-input>
+					<el-form-item label="邮箱">
+						<div class="email-verification">
+							<el-input 
+								v-model="admin.email" 
+								placeholder="请输入邮箱"
+								class="email-input"
+							></el-input>
+							<el-button 
+								type="primary" 
+								@click="sendEmailCode('admin')"
+								:disabled="adminEmailTimer > 0"
+								class="send-code-btn"
+							>
+								{{ adminEmailTimer > 0 ? `${adminEmailTimer}s后重试` : '发送验证码' }}
+							</el-button>
+						</div>
+					</el-form-item>
+
+					<el-form-item label="验证码">
+						<el-input 
+							v-model="securityCode" 
+							placeholder="请输入邮箱验证码"
+						></el-input>
 					</el-form-item>
 
 					<el-form-item>
@@ -102,9 +122,29 @@
 						</el-input>
 					</el-form-item>
 
-					<el-form-item class="verification-group">
-						<el-image class="verification-img" :src="imageURL" @click="ChangeVerification()" fit="cover"></el-image>
-						<el-input v-model="securityCode" @blur="VerificationCode()" placeholder="请输入验证码"></el-input>
+					<el-form-item label="邮箱">
+						<div class="email-verification">
+							<el-input 
+								v-model="user.email" 
+								placeholder="请输入邮箱"
+								class="email-input"
+							></el-input>
+							<el-button 
+								type="primary" 
+								@click="sendEmailCode('user')"
+								:disabled="userEmailTimer > 0"
+								class="send-code-btn"
+							>
+								{{ userEmailTimer > 0 ? `${userEmailTimer}s后重试` : '发送验证码' }}
+							</el-button>
+						</div>
+					</el-form-item>
+
+					<el-form-item label="验证码">
+						<el-input 
+							v-model="securityCode" 
+							placeholder="请输入邮箱验证码"
+						></el-input>
 					</el-form-item>
 
 					<el-form-item>
@@ -148,9 +188,29 @@
 						</el-input>
 					</el-form-item>
 
-					<el-form-item class="verification-group">
-						<el-image class="verification-img" :src="imageURL" @click="ChangeVerification()" fit="cover"></el-image>
-						<el-input v-model="securityCode" @blur="VerificationCode()" placeholder="请输入验证码"></el-input>
+					<el-form-item label="邮箱">
+						<div class="email-verification">
+							<el-input 
+								v-model="coach.email" 
+								placeholder="请输入邮箱"
+								class="email-input"
+							></el-input>
+							<el-button 
+								type="primary" 
+								@click="sendEmailCode('coach')"
+								:disabled="coachEmailTimer > 0"
+								class="send-code-btn"
+							>
+								{{ coachEmailTimer > 0 ? `${coachEmailTimer}s后重试` : '发送验证码' }}
+							</el-button>
+						</div>
+					</el-form-item>
+
+					<el-form-item label="验证码">
+						<el-input 
+							v-model="securityCode" 
+							placeholder="请输入邮箱验证码"
+						></el-input>
 					</el-form-item>
 
 					<el-form-item>
@@ -160,13 +220,118 @@
 			</div>
 		</div>
 
-		<!-- 弹窗部分保持不变 -->
-		<el-dialog :visible.sync="dialogVisible" title="完善信息" width="30%">
-			<!-- 用户额外信息表单 -->
+		<!-- 修改用户和教练的弹窗部分 -->
+
+		<!-- 用户信息弹窗 -->
+		<el-dialog 
+			:visible.sync="dialogVisible" 
+			title="完善个人信息" 
+			width="400px"
+			custom-class="custom-dialog"
+		>
+			<el-form :model="user" ref="user" label-width="90px" class="info-form">
+				<el-form-item label="出生日期" class="form-item">
+					<el-date-picker 
+						v-model="user.birthday" 
+						@blur="CheckUserbirthday()" 
+						type="date"
+						placeholder="选择日期"
+						class="full-width"
+					></el-date-picker>
+				</el-form-item>
+
+				<el-form-item label="性别" class="form-item">
+					<el-radio-group v-model="user.sex">
+						<el-radio label="男">男</el-radio>
+						<el-radio label="女">女</el-radio>
+					</el-radio-group>
+				</el-form-item>
+
+				<el-form-item label="身高" class="form-item">
+					<el-input 
+						v-model="user.height" 
+						@blur="CheckUserHeight()"
+						class="with-unit"
+					>
+						<template slot="append">cm</template>
+					</el-input>
+				</el-form-item>
+
+				<el-form-item label="体重" class="form-item">
+					<el-input 
+						v-model="user.weight" 
+						@blur="CheckUserWeight()"
+						class="with-unit"
+					>
+						<template slot="append">斤</template>
+					</el-input>
+				</el-form-item>
+
+				<div class="dialog-footer">
+					<el-button @click="CloseDialog()" plain>取消</el-button>
+					<el-button 
+						type="primary" 
+						@click="UserRegister()" 
+						:disabled="!userOtherShow"
+					>完成注册</el-button>
+				</div>
+			</el-form>
 		</el-dialog>
 
-		<el-dialog :visible.sync="dialogVisible1" title="完善信息" width="30%">
-			<!-- 教练额外信息表单 -->
+		<!-- 教练信息弹窗 -->
+		<el-dialog 
+			:visible.sync="dialogVisible1" 
+			title="完善个人信息" 
+			width="400px"
+			custom-class="custom-dialog"
+		>
+			<el-form :model="coach" ref="coach" label-width="90px" class="info-form">
+				<el-form-item label="出生日期" class="form-item">
+					<el-date-picker 
+						v-model="coach.birthday" 
+						@blur="CheckCoachbirthday()" 
+						type="date"
+						placeholder="请择日期"
+						class="full-width"
+					></el-date-picker>
+				</el-form-item>
+
+				<el-form-item label="性别" class="form-item">
+					<el-radio-group v-model="coach.sex">
+						<el-radio label="男">男</el-radio>
+						<el-radio label="女">女</el-radio>
+					</el-radio-group>
+				</el-form-item>
+
+				<el-form-item label="身高" class="form-item">
+					<el-input 
+						v-model="coach.height" 
+						@blur="CheckCoachHeight()"
+						class="with-unit"
+					>
+						<template slot="append">cm</template>
+					</el-input>
+				</el-form-item>
+
+				<el-form-item label="体重" class="form-item">
+					<el-input 
+						v-model="coach.weight" 
+						@blur="CheckCoachWeight()"
+						class="with-unit"
+					>
+						<template slot="append">斤</template>
+					</el-input>
+				</el-form-item>
+
+				<div class="dialog-footer">
+					<el-button @click="CloseDialog1()" plain>取消</el-button>
+					<el-button 
+						type="primary" 
+						@click="CoachRegister()" 
+						:disabled="!coachOtherShow"
+					>完成注册</el-button>
+				</div>
+			</el-form>
 		</el-dialog>
 	</div>
 </template>
@@ -190,6 +355,7 @@
 					password: '',
 					againPassword: '',
 					tel: '',
+					email: '',
 				},
 				user: {
 					username: '',
@@ -201,6 +367,7 @@
 					tel: '',
 					height: '',
 					weight: '',
+					email: '',
 				},
 				coach: {
 					username: '',
@@ -208,12 +375,17 @@
 					againPassword: '',
 					name: '',
 					birthday: '',
+					
 					sex: '',
 					tel: '',
 					height: '',
 					weight: '',
+					email: '',
 				},
 				currentType: 'user', // 默认显示用户注册
+				adminEmailTimer: 0,
+				userEmailTimer: 0,
+				coachEmailTimer: 0,
 			}
 		},
 		mounted() {
@@ -407,7 +579,7 @@
 					// 计算用户年龄
 					const age = currentDate.getFullYear() - userBirthday.getFullYear();
 			
-					// 判断用户年龄是否在指定范围内
+					// 判断用户年龄是否在���定范围内
 					if (age >= 14 && age <= 120 && userBirthday < currentDate) {
 						// 用户年龄合法
 						return;
@@ -678,6 +850,59 @@
 					}
 				}
 			},
+			async sendEmailCode(type) {
+				// 获取对应类型的邮箱
+				const email = this[type].email;
+				
+				// 验证邮箱格式
+				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				if (!emailRegex.test(email)) {
+					this.$notify({
+						title: '温馨提示',
+						message: '请输入正确的邮箱格式',
+						type: 'warning',
+						position: 'top-left'
+					});
+					return;
+				}
+
+				try {
+					// 调用发送验证码接口
+					const response = await this.$api.util.sendEmailCode({ email });
+					
+					if (response.data.code === 200) {
+						this.$notify({
+							title: '发送成功',
+							message: '验证码已发送到您的邮箱',
+							type: 'success',
+							position: 'top-left'
+						});
+						
+						// 开始倒计时
+						this[`${type}EmailTimer`] = 60;
+						const timer = setInterval(() => {
+							this[`${type}EmailTimer`]--;
+							if (this[`${type}EmailTimer`] <= 0) {
+								clearInterval(timer);
+							}
+						}, 1000);
+					} else {
+						this.$notify({
+							title: '发送失败',
+							message: response.data.message || '验证码发送失败，请稍后重试',
+							type: 'error',
+							position: 'top-left'
+						});
+					}
+				} catch (error) {
+					this.$notify({
+						title: '发送失败',
+						message: '网络错误，请稍后重试',
+						type: 'error',
+						position: 'top-left'
+					});
+				}
+			},
 		}
 	}
 </script>
@@ -902,6 +1127,132 @@
 	
 	.register-card {
 		margin: 10px;
+	}
+}
+
+/* 添加以下样式 */
+.custom-dialog {
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.custom-dialog .el-dialog__header {
+	background: linear-gradient(135deg, #00B4DB, #0083B0);
+	padding: 20px;
+	margin: 0;
+}
+
+.custom-dialog .el-dialog__title {
+	color: white;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.custom-dialog .el-dialog__body {
+	padding: 30px;
+}
+
+.info-form {
+	margin: 0;
+}
+
+.form-item {
+	margin-bottom: 25px;
+}
+
+.form-item:last-child {
+	margin-bottom: 0;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.with-unit {
+	width: 100%;
+}
+
+.with-unit .el-input-group__append {
+	background-color: #f5f7fa;
+	color: #909399;
+	padding: 0 15px;
+}
+
+.el-radio {
+	margin-right: 30px;
+}
+
+.el-radio__label {
+	font-size: 14px;
+}
+
+.dialog-footer {
+	text-align: right;
+	margin-top: 30px;
+}
+
+.dialog-footer .el-button {
+	padding: 12px 25px;
+	font-size: 14px;
+}
+
+.dialog-footer .el-button + .el-button {
+	margin-left: 15px;
+}
+
+/* 输入框样式优化 */
+.el-input__inner {
+	height: 40px;
+	line-height: 40px;
+}
+
+.el-date-editor.el-input {
+	width: 100%;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+	.custom-dialog {
+		width: 90% !important;
+		margin: 0 auto;
+	}
+	
+	.el-form-item__label {
+		float: none;
+		text-align: left;
+		margin-bottom: 8px;
+	}
+	
+	.el-form-item__content {
+		margin-left: 0 !important;
+	}
+}
+
+/* 添加邮箱验证码相关样式 */
+.email-verification {
+	display: flex;
+	gap: 10px;
+}
+
+.email-input {
+	flex: 1;
+}
+
+.send-code-btn {
+	width: 120px !important;
+	padding: 0 !important;
+	font-size: 13px !important;
+}
+
+/* 在小屏幕上调整布局 */
+@media (max-width: 768px) {
+	.email-verification {
+		flex-direction: column;
+		gap: 10px;
+	}
+	
+	.send-code-btn {
+		width: 100% !important;
 	}
 }
 </style>
