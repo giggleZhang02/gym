@@ -1,47 +1,8 @@
 <template>
-	<div class="admin-home">
-		<div class="dashboard-container">
-			<!-- 数据概览卡片 -->
-			<div class="stat-cards">
-				<div class="stat-card">
-					<div class="stat-icon">
-						<i class="el-icon-user"></i>
-					</div>
-					<div class="stat-content">
-						<div class="stat-value">{{ totalUsers }}</div>
-						<div class="stat-label">总用户数</div>
-					</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-icon">
-						<i class="el-icon-video-camera"></i>
-					</div>
-					<div class="stat-content">
-						<div class="stat-value">{{ totalCourses }}</div>
-						<div class="stat-label">总课程数</div>
-					</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-icon">
-						<i class="el-icon-shopping-cart-full"></i>
-					</div>
-					<div class="stat-content">
-						<div class="stat-value">{{ totalEquipment }}</div>
-						<div class="stat-label">器材总数</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- 图表区域 -->
-			<div class="charts-container">
-				<div class="chart-wrapper">
-					<div id="main" class="chart"></div>
-				</div>
-				<div class="chart-wrapper">
-					<div id="main1" class="chart"></div>
-				</div>
-			</div>
-		</div>
+	<div style="overflow-x: auto;height: 600px;">
+		<div id="main" style="width: 1000px;height:300px;"></div>
+		<br>
+		<div id="main1" style="width: 1000px;height:300px;"></div>
 	</div>
 </template>
 
@@ -52,9 +13,6 @@
 			return {
 				EquipmentData: [],
 				courseData: [],
-				totalUsers: 0,
-				totalCourses: 0,
-				totalEquipment: 0,
 			}
 		},
 		mounted() {
@@ -82,73 +40,42 @@
 				let chartDom = document.getElementById('main1');
 				let myChart = echarts.init(chartDom);
 
+				let courseNames = this.courseData.map(item => item.courseName);
+				let favoriteCounts = this.courseData.map(item => item.favoriteCount);
+				let purchaseCounts = this.courseData.map(item => item.purchaseCount);
+
 				let option = {
 					title: {
-						text: '课程数据分析',
-						textStyle: {
-							fontSize: 16,
-							fontWeight: 'normal'
-						},
-						left: 'center'
+						text: '课程收藏数和购买数量统计',
+						subtext: 'Course Favorite Counts and Purchase Counts'
 					},
 					tooltip: {
-						trigger: 'axis',
-						backgroundColor: 'rgba(255, 255, 255, 0.9)',
-						borderColor: '#eee',
-						borderWidth: 1,
-						textStyle: {
-							color: '#333'
-						},
-						axisPointer: {
-							type: 'shadow'
-						}
+						trigger: 'axis'
 					},
 					legend: {
-						bottom: '5%',
 						data: ['收藏数', '购买数量']
-					},
-					grid: {
-						left: '3%',
-						right: '4%',
-						bottom: '15%',
-						top: '15%',
-						containLabel: true
 					},
 					xAxis: {
 						type: 'category',
-						data: this.courseData.map(item => item.courseName),
-						axisLabel: {
-							interval: 0,
-							rotate: 30
-						}
+						data: courseNames
 					},
 					yAxis: {
 						type: 'value'
 					},
-					series: [
-						{
+					series: [{
 							name: '收藏数',
-							type: 'bar',
-							data: this.courseData.map(item => item.favoriteCount),
-							itemStyle: {
-								color: '#91cc75'
-							}
+							type: 'line',
+							data: favoriteCounts
 						},
 						{
 							name: '购买数量',
-							type: 'bar',
-							data: this.courseData.map(item => item.purchaseCount),
-							itemStyle: {
-								color: '#5470c6'
-							}
+							type: 'line',
+							data: purchaseCounts
 						}
 					]
 				};
 
 				myChart.setOption(option);
-				window.addEventListener('resize', () => {
-					myChart.resize();
-				});
 			},
 			EquipmentRenderChart() {
 				let chartDom = document.getElementById('main');
@@ -247,99 +174,4 @@
 </script>
 
 <style scoped>
-.admin-home {
-	padding: 20px;
-	background-color: #f5f7fa;
-	min-height: 100vh;
-}
-
-.dashboard-container {
-	max-width: 1400px;
-	margin: 0 auto;
-}
-
-.stat-cards {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: 20px;
-	margin-bottom: 24px;
-}
-
-.stat-card {
-	background: white;
-	border-radius: 8px;
-	padding: 20px;
-	display: flex;
-	align-items: center;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-	transition: transform 0.3s ease;
-}
-
-.stat-card:hover {
-	transform: translateY(-5px);
-}
-
-.stat-icon {
-	width: 48px;
-	height: 48px;
-	border-radius: 12px;
-	background: #ecf5ff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-right: 16px;
-}
-
-.stat-icon i {
-	font-size: 24px;
-	color: #409eff;
-}
-
-.stat-content {
-	flex: 1;
-}
-
-.stat-value {
-	font-size: 24px;
-	font-weight: 600;
-	color: #303133;
-	margin-bottom: 4px;
-}
-
-.stat-label {
-	font-size: 14px;
-	color: #909399;
-}
-
-.charts-container {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 24px;
-}
-
-.chart-wrapper {
-	background: white;
-	border-radius: 8px;
-	padding: 20px;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-}
-
-.chart {
-	width: 100%;
-	height: 400px;
-}
-
-@media (max-width: 768px) {
-	.admin-home {
-		padding: 10px;
-	}
-	
-	.stat-cards {
-		grid-template-columns: 1fr;
-	}
-	
-	.chart {
-		height: 300px;
-	}
-}
 </style>
