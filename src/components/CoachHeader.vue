@@ -1,25 +1,32 @@
 <template>
 	<div class="header-container">
-
-		<div class="l-content">
-			<el-button @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
-			<span class="text">首页</span>
+		<div class="left">
+			<el-button
+				@click="handleMenu"
+				icon="el-icon-menu"
+				class="collapse-btn"
+				type="text">
+			</el-button>
+			<span class="breadcrumb">首页</span>
 		</div>
 
-		<img style="margin-right: 400px;margin-top: 1px;" id="logo" :src="logoLink" alt="Logo">
-		<div style="width: 300px;color: #aaff00;">
-			<h3>欢迎您! {{name}} - 教练</h3>
+		<div class="center">
+			<img class="logo" :src="logoLink" alt="Logo">
 		</div>
 
-		<div class="r-content">
-
-			<el-dropdown>
-				<span class="el-dropdown-link">
-					<img class="user" :src="imageLink" @click="OpenDialog()">
+		<div class="right">
+			<span class="welcome">欢迎您! {{name}} - 教练</span>
+			
+			<el-dropdown trigger="click">
+				<span class="avatar-wrapper">
+					<img class="user-avatar" :src="imageLink" @click="OpenDialog()">
+					<i class="el-icon-caret-bottom"></i>
 				</span>
 
 				<el-dropdown-menu slot="dropdown">
-					<el-dropdown-item @click.prevent.native="logout()">退出</el-dropdown-item>
+					<el-dropdown-item @click.native="logout()">
+						<i class="el-icon-switch-button"></i> 退出
+					</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
 		</div>
@@ -121,53 +128,98 @@
 </script>
 
 <style lang="less" scoped>
-	.header-container {
-		padding: 0 20px;
-		background-color: #333;
-		height: 60px;
+.header-container {
+	height: 64px;
+	padding: 0 24px;
+	background: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
+	.left {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
 
-		.text {
-			color: #fff;
-			font-size: 14px;
-			margin-left: 10px;
+		.collapse-btn {
+			font-size: 20px;
+			color: #666;
+			margin-right: 15px;
 		}
 
-		.r-content {
-			.user {
+		.breadcrumb {
+			font-size: 14px;
+			color: #666;
+		}
+	}
+
+	.center {
+		.logo {
+			height: 40px;
+			object-fit: contain;
+		}
+	}
+
+	.right {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+
+		.welcome {
+			color: #666;
+			font-size: 14px;
+		}
+
+		.avatar-wrapper {
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+
+			.user-avatar {
 				width: 40px;
 				height: 40px;
 				border-radius: 50%;
+				border: 2px solid #f0f0f0;
+				transition: all 0.3s;
+
+				&:hover {
+					transform: scale(1.1);
+				}
+			}
+
+			.el-icon-caret-bottom {
+				color: #666;
+				font-size: 12px;
 			}
 		}
 	}
+}
 
-	.avatar-uploader .el-upload {
-		border: 1px dashed #d9d9d9;
-		border-radius: 6px;
-		cursor: pointer;
-		position: relative;
-		overflow: hidden;
-	}
+.avatar-uploader .el-upload {
+	border: 1px dashed #d9d9d9;
+	border-radius: 6px;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+}
 
-	.avatar-uploader .el-upload:hover {
-		border-color: #409EFF;
-	}
+.avatar-uploader .el-upload:hover {
+	border-color: #409EFF;
+}
 
-	.avatar-uploader-icon {
-		font-size: 28px;
-		color: #8c939d;
-		width: 178px;
-		height: 178px;
-		line-height: 178px;
-		text-align: center;
-	}
+.avatar-uploader-icon {
+	font-size: 28px;
+	color: #8c939d;
+	width: 178px;
+	height: 178px;
+	line-height: 178px;
+	text-align: center;
+}
 
-	.avatar {
-		width: 178px;
-		height: 178px;
-		display: block;
-	}
+.avatar {
+	width: 178px;
+	height: 178px;
+	display: block;
+}
 </style>

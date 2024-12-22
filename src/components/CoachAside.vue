@@ -1,8 +1,21 @@
 <template>
-	<el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-		:collapse="isCollapse" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-		<h3>{{ isCollapse ? 'FitHub' : 'FitHub教练中心'}}</h3>
-		<el-menu-item @click="clickMenu(item)" v-for="item in noChildren" :key="item.name" :index="item.name">
+	<el-menu
+		:default-active="$route.path"
+		class="el-menu-vertical"
+		@open="handleOpen"
+		@close="handleClose"
+		:collapse="isCollapse"
+		background-color="#001529"
+		text-color="#fff"
+		active-text-color="#1890ff">
+		
+		<div class="logo-container">
+			<h3 :class="{'logo-title': true, 'logo-title-collapse': isCollapse}">
+				{{ isCollapse ? 'FH' : 'FitHub教练' }}
+			</h3>
+		</div>
+
+		<el-menu-item @click="clickMenu(item)" v-for="item in noChildren" :key="item.name" :index="item.path">
 			<i :class="`el-icon-${item.icon}`"></i>
 			<span slot="title">{{item.label}}</span>
 		</el-menu-item>
@@ -20,20 +33,81 @@
 </template>
 
 <style lang="less" scoped>
-	.el-menu-vertical-demo:not(.el-menu--collapse) {
-		width: 200px;
+	.el-menu-vertical:not(.el-menu--collapse) {
+		width: 256px;
 		min-height: 400px;
 	}
 
 	.el-menu {
 		height: 100vh;
+		border-right: none;
 
-		h3 {
+		.logo-container {
+			height: 64px;
+			line-height: 64px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.logo-title {
 			color: #fff;
-			text-align: center;
-			line-height: 48px;
+			font-size: 20px;
+			font-weight: 600;
+			transition: all 0.3s;
+			white-space: nowrap;
+		}
+
+		.logo-title-collapse {
 			font-size: 16px;
-			font-weight: 400;
+		}
+	}
+
+	.el-menu-item {
+		&:hover {
+			background-color: #1890ff !important;
+			color: #fff !important;
+		}
+
+		&.is-active {
+			background-color: #1890ff !important;
+			color: #fff !important;
+			
+			&::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 3px;
+				background: #fff;
+			}
+			
+			i {
+				color: #fff !important;
+			}
+		}
+
+		transition: all 0.3s ease;
+		
+		i {
+			transition: all 0.3s ease;
+		}
+		
+		span {
+			transition: all 0.3s ease;
+		}
+	}
+
+	.el-submenu {
+		.el-menu-item {
+			background-color: #000c17 !important;
+			
+			&:hover, &.is-active {
+				background-color: #1890ff !important;
+				color: #fff !important;
+			}
 		}
 	}
 </style>
@@ -121,8 +195,3 @@
 		}
 	}
 </script>
-<style lang="less" scoped>
-	.el-menu {
-		border-right: none;
-	}
-</style>
