@@ -5,218 +5,232 @@
 		<!-- 导航栏 -->
 		<div class="nav-header">
 			<div class="nav-brand">
-				<img :src="logoLink" alt="Logo">
+				<i class="el-icon-platform-eleme"></i>
 				<h1>FitHub 注册中心</h1>
 			</div>
 			<router-link to="/" class="nav-link">已有账号？登录</router-link>
 		</div>
 
-		<!-- 注册类型选择 -->
-		<div class="register-type-selector">
-			<el-radio-group v-model="currentType" size="large">
-				<el-radio-button label="user">用户注册</el-radio-button>
-				<el-radio-button label="coach">教练注册</el-radio-button>
-				<el-radio-button label="admin">管理员注册</el-radio-button>
-			</el-radio-group>
-		</div>
-
-		<!-- 注册表单区域 -->
-		<div class="register-content">
-			<!-- 管理员注册 -->
-			<div class="register-card admin-card" v-if="currentType === 'admin'">
-				<h2>管理员注册</h2>
-				<el-form ref="form" :model="admin" label-width="80px">
-					<el-form-item label="密钥">
-						<el-input type="password" v-model="supperAdminPassword" @blur="CheckSupperAdminPassword()" 
-							placeholder="请输入管理员密钥">
-						</el-input>
-					</el-form-item>
-
-					<el-form-item label="用户名">
-						<el-input v-model="admin.username" @blur="isRepetitionAdminUsername()"
-							placeholder="请输入用户名">
-						</el-input>
-					</el-form-item>
-
-					<el-form-item label="密码">
-						<el-input type="password" v-model="admin.password" @blur="CheckAdminPassword()"
-							placeholder="请输入密码">
-						</el-input>
-					</el-form-item>
-
-					<el-form-item label="确认密码">
-						<el-input type="password" v-model="admin.againPassword" @blur="AgainCheckAdminPassword()"
-							placeholder="请确认密码">
-						</el-input>
-					</el-form-item>
-
-					<el-form-item label="电话">
-						<el-input v-model="admin.tel" @blur="CheckAdminTel()"
-							placeholder="请输入电话号码">
-						</el-input>
-					</el-form-item>
-
-					<el-form-item label="邮箱">
-						<div class="email-verification">
-							<el-input 
-								v-model="admin.email" 
-								placeholder="请输入邮箱"
-								class="email-input"
-							></el-input>
-							<el-button 
-								type="primary" 
-								@click="sendEmailCode('admin')"
-								:disabled="adminEmailTimer > 0"
-								class="send-code-btn"
-							>
-								{{ adminEmailTimer > 0 ? `${adminEmailTimer}s后重试` : '发送验证码' }}
-							</el-button>
-						</div>
-					</el-form-item>
-
-					<el-form-item label="验证码">
-						<el-input 
-							v-model="securityCode" 
-							placeholder="请输入邮箱验证码"
-						></el-input>
-					</el-form-item>
-
-					<el-form-item>
-						<el-button type="primary" @click="AdminRegister()" :disabled="!adminShow">注册</el-button>
-					</el-form-item>
-				</el-form>
+		<!-- 注册主体区域 -->
+		<div class="register-box">
+			<!-- 左侧欢迎区域 -->
+			<div class="register-left">
+				<div class="welcome-text">
+					<h2>欢迎加入</h2>
+					<p>开启您的健身之旅</p>
+				</div>
 			</div>
 
-			<!-- 用户注册 -->
-			<div class="register-card user-card" v-if="currentType === 'user'">
-				<h2>用户注册</h2>
-				<el-form ref="form" :model="user" label-width="80px">
-					<!-- 用户注册表单内容 -->
-					<el-form-item label="用户名">
-						<el-input v-model="user.username" @blur="isRepetitionUserUsername()"
-							placeholder="请输入用户名">
-						</el-input>
-					</el-form-item>
+			<!-- 右侧注册表单区域 -->
+			<div class="register-right">
+				<!-- 注册类型选择 -->
+				<div class="register-type-selector">
+					<el-radio-group v-model="currentType" size="large">
+						<el-radio-button label="user">用户注册</el-radio-button>
+						<el-radio-button label="coach">教练注册</el-radio-button>
+						<el-radio-button label="admin">管理员注册</el-radio-button>
+					</el-radio-group>
+				</div>
 
-					<el-form-item label="密码">
-						<el-input type="password" v-model="user.passcode" @blur="CheckUserPassword()"
-							placeholder="请输入密码">
-						</el-input>
-					</el-form-item>
+				<!-- 注册表单内容 -->
+				<div class="register-content">
+					<!-- 管理员注册 -->
+					<div class="register-card admin-card" v-if="currentType === 'admin'">
+						<h2>管理员注册</h2>
+						<el-form ref="form" :model="admin" label-width="80px">
+							<el-form-item label="密钥">
+								<el-input type="password" v-model="supperAdminPassword" @blur="CheckSupperAdminPassword()" 
+									placeholder="请输入管理员密钥">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="确认密码">
-						<el-input type="password" v-model="user.againPassword" @blur="AgainCheckUserPassword()"
-							placeholder="请确认密码">
-						</el-input>
-					</el-form-item>
+							<el-form-item label="用户名">
+								<el-input v-model="admin.username" @blur="isRepetitionAdminUsername()"
+									placeholder="请输入用户名">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="真实姓名">
-						<el-input v-model="user.name" @blur="CheckUserName()"
-							placeholder="请输入真实姓名">
-						</el-input>
-					</el-form-item>
+							<el-form-item label="密码">
+								<el-input type="password" v-model="admin.password" @blur="CheckAdminPassword()"
+									placeholder="请输入密码">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="电话">
-						<el-input v-model="user.tel" @blur="CheckUserTel()"
-							placeholder="请输入电话号码">
-						</el-input>
-					</el-form-item>
+							<el-form-item label="确认密码">
+								<el-input type="password" v-model="admin.againPassword" @blur="AgainCheckAdminPassword()"
+									placeholder="请确认密码">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="邮箱">
-						<div class="email-verification">
-							<el-input 
-								v-model="user.email" 
-								placeholder="请输入邮箱"
-								class="email-input"
-							></el-input>
-							<el-button 
-								type="primary" 
-								@click="sendEmailCode('user')"
-								:disabled="userEmailTimer > 0"
-								class="send-code-btn"
-							>
-								{{ userEmailTimer > 0 ? `${userEmailTimer}s后重试` : '发送验证码' }}
-							</el-button>
-						</div>
-					</el-form-item>
+							<el-form-item label="电话">
+								<el-input v-model="admin.tel" @blur="CheckAdminTel()"
+									placeholder="请输入电话号码">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="验证码">
-						<el-input 
-							v-model="securityCode" 
-							placeholder="请输入邮箱验证码"
-						></el-input>
-					</el-form-item>
+							<el-form-item label="邮箱">
+								<div class="email-verification">
+									<el-input 
+										v-model="admin.email" 
+										placeholder="请输入邮箱"
+										class="email-input"
+									></el-input>
+									<el-button 
+										type="primary" 
+										@click="sendEmailCode('admin')"
+										:disabled="adminEmailTimer > 0"
+										class="send-code-btn"
+									>
+										{{ adminEmailTimer > 0 ? `${adminEmailTimer}s后重试` : '发送验证码' }}
+									</el-button>
+								</div>
+							</el-form-item>
 
-					<el-form-item>
-						<el-button type="success" @click="OpendialogVisible()" :disabled="!userShow">下一步</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
+							<el-form-item label="验证码">
+								<el-input 
+									v-model="securityCode" 
+									placeholder="请输入邮箱验证码"
+								></el-input>
+							</el-form-item>
 
-			<!-- 教练注册 -->
-			<div class="register-card coach-card" v-if="currentType === 'coach'">
-				<h2>教练注册</h2>
-				<el-form ref="form" :model="coach" label-width="80px">
-					<!-- 教练注册表单内容 -->
-					<el-form-item label="用户名">
-						<el-input v-model="coach.username" @blur="isRepetitionCoachUsername()"
-							placeholder="请输入用户名">
-						</el-input>
-					</el-form-item>
+							<el-form-item>
+								<el-button type="primary" @click="AdminRegister()" :disabled="!adminShow">注册</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
 
-					<el-form-item label="密码">
-						<el-input type="password" v-model="coach.passcode" @blur="CheckCoachPassword()"
-							placeholder="请输入密码">
-						</el-input>
-					</el-form-item>
+					<!-- 用户注册 -->
+					<div class="register-card user-card" v-if="currentType === 'user'">
+						<h2>用户注册</h2>
+						<el-form ref="form" :model="user" label-width="80px">
+							<!-- 用户注册表单内容 -->
+							<el-form-item label="用户名">
+								<el-input v-model="user.username" @blur="isRepetitionUserUsername()"
+									placeholder="请输入用户名">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="确认密码">
-						<el-input type="password" v-model="coach.againPassword" @blur="AgainCheckCoachPassword()"
-							placeholder="请确认密码">
-						</el-input>
-					</el-form-item>
+							<el-form-item label="密码">
+								<el-input type="password" v-model="user.passcode" @blur="CheckUserPassword()"
+									placeholder="请输入密码">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="真实姓名">
-						<el-input v-model="coach.name" @blur="CheckCoachName()"
-							placeholder="请输入真实姓名">
-						</el-input>
-					</el-form-item>
+							<el-form-item label="确认密码">
+								<el-input type="password" v-model="user.againPassword" @blur="AgainCheckUserPassword()"
+									placeholder="请确认密码">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="电话">
-						<el-input v-model="coach.tel" @blur="CheckCoachTel()"
-							placeholder="请输入电话号码">
-						</el-input>
-					</el-form-item>
+							<el-form-item label="真实姓名">
+								<el-input v-model="user.name" @blur="CheckUserName()"
+									placeholder="请输入真实姓名">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="邮箱">
-						<div class="email-verification">
-							<el-input 
-								v-model="coach.email" 
-								placeholder="请输入邮箱"
-								class="email-input"
-							></el-input>
-							<el-button 
-								type="primary" 
-								@click="sendEmailCode('coach')"
-								:disabled="coachEmailTimer > 0"
-								class="send-code-btn"
-							>
-								{{ coachEmailTimer > 0 ? `${coachEmailTimer}s后重试` : '发送验证码' }}
-							</el-button>
-						</div>
-					</el-form-item>
+							<el-form-item label="电话">
+								<el-input v-model="user.tel" @blur="CheckUserTel()"
+									placeholder="请输入电话号码">
+								</el-input>
+							</el-form-item>
 
-					<el-form-item label="验证码">
-						<el-input 
-							v-model="securityCode" 
-							placeholder="请输入邮箱验证码"
-						></el-input>
-					</el-form-item>
+							<el-form-item label="邮箱">
+								<div class="email-verification">
+									<el-input 
+										v-model="user.email" 
+										placeholder="请输入邮箱"
+										class="email-input"
+									></el-input>
+									<el-button 
+										type="primary" 
+										@click="sendEmailCode('user')"
+										:disabled="userEmailTimer > 0"
+										class="send-code-btn"
+									>
+										{{ userEmailTimer > 0 ? `${userEmailTimer}s后重试` : '发送验证码' }}
+									</el-button>
+								</div>
+							</el-form-item>
 
-					<el-form-item>
-						<el-button type="danger" @click="OpendialogVisible1()" :disabled="!coachShow">下一步</el-button>
-					</el-form-item>
-				</el-form>
+							<el-form-item label="验证码">
+								<el-input 
+									v-model="securityCode" 
+									placeholder="请输入邮箱验证码"
+								></el-input>
+							</el-form-item>
+
+							<el-form-item>
+								<el-button type="success" @click="OpendialogVisible()" :disabled="!userShow">下一步</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
+
+					<!-- 教练注册 -->
+					<div class="register-card coach-card" v-if="currentType === 'coach'">
+						<h2>教练注册</h2>
+						<el-form ref="form" :model="coach" label-width="80px">
+							<!-- 教练注册表单内容 -->
+							<el-form-item label="用户名">
+								<el-input v-model="coach.username" @blur="isRepetitionCoachUsername()"
+									placeholder="请输入用户名">
+								</el-input>
+							</el-form-item>
+
+							<el-form-item label="密码">
+								<el-input type="password" v-model="coach.passcode" @blur="CheckCoachPassword()"
+									placeholder="请输入密码">
+								</el-input>
+							</el-form-item>
+
+							<el-form-item label="确认密码">
+								<el-input type="password" v-model="coach.againPassword" @blur="AgainCheckCoachPassword()"
+									placeholder="请确认密码">
+								</el-input>
+							</el-form-item>
+
+							<el-form-item label="真实姓名">
+								<el-input v-model="coach.name" @blur="CheckCoachName()"
+									placeholder="请输入真实姓名">
+								</el-input>
+							</el-form-item>
+
+							<el-form-item label="电话">
+								<el-input v-model="coach.tel" @blur="CheckCoachTel()"
+									placeholder="请输入电话号码">
+								</el-input>
+							</el-form-item>
+
+							<el-form-item label="邮箱">
+								<div class="email-verification">
+									<el-input 
+										v-model="coach.email" 
+										placeholder="请输入邮箱"
+										class="email-input"
+									></el-input>
+									<el-button 
+										type="primary" 
+										@click="sendEmailCode('coach')"
+										:disabled="coachEmailTimer > 0"
+										class="send-code-btn"
+									>
+										{{ coachEmailTimer > 0 ? `${coachEmailTimer}s后重试` : '发送验证码' }}
+									</el-button>
+								</div>
+							</el-form-item>
+
+							<el-form-item label="验证码">
+								<el-input 
+									v-model="securityCode" 
+									placeholder="请输入邮箱验证码"
+								></el-input>
+							</el-form-item>
+
+							<el-form-item>
+								<el-button type="danger" @click="OpendialogVisible1()" :disabled="!coachShow">下一步</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -579,7 +593,7 @@
 					// 计算用户年龄
 					const age = currentDate.getFullYear() - userBirthday.getFullYear();
 			
-					// 判断用户年龄是否在���定范围内
+					// 判断用户年龄是否在指定范围内
 					if (age >= 14 && age <= 120 && userBirthday < currentDate) {
 						// 用户年龄合法
 						return;
@@ -909,13 +923,12 @@
 
 <style scoped>
 .register-container {
-	min-height: 100vh;
 	width: 100vw;
-	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-	background-size: 400% 400%;
-	animation: gradientBG 15s ease infinite;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background-color: #f5f7fa;
 	position: relative;
-	overflow-x: hidden;
 }
 
 .register-background {
@@ -924,30 +937,23 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-image: 
-		radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.2) 2%, transparent 0%),
-		radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.2) 2%, transparent 0%);
-	background-size: 100px 100px;
+	background: 
+		linear-gradient(90deg, #f5f7fa 21px, transparent 1%) center,
+		linear-gradient(#f5f7fa 21px, transparent 1%) center,
+		#e6e8eb;
+	background-size: 22px 22px;
 	pointer-events: none;
-	opacity: 0.3;
-	z-index: 0;
-}
-
-@keyframes gradientBG {
-	0% { background-position: 0% 50%; }
-	50% { background-position: 100% 50%; }
-	100% { background-position: 0% 50%; }
 }
 
 .nav-header {
 	position: relative;
 	z-index: 1;
+	padding: 20px 40px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 20px 40px;
-	background: rgba(255, 255, 255, 0.1);
-	backdrop-filter: blur(10px);
+	background: #ffffff;
+	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
 
 .nav-brand {
@@ -956,279 +962,140 @@
 	gap: 15px;
 }
 
-.nav-brand img {
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
+.nav-brand i {
+	font-size: 32px;
+	color: #2c3e50;
 }
 
 .nav-brand h1 {
-	color: white;
 	font-size: 24px;
+	color: #2c3e50;
 	margin: 0;
 }
 
 .nav-link {
-	color: white;
+	color: #2c3e50;
 	text-decoration: none;
 	font-size: 16px;
-	transition: all 0.3s ease;
+	transition: color 0.3s ease;
 }
 
 .nav-link:hover {
 	color: #409EFF;
 }
 
-.register-content {
+.register-box {
 	position: relative;
 	z-index: 1;
 	display: flex;
-	justify-content: center;
-	gap: 30px;
+	width: 1200px;
+	margin: 40px auto;
+	background: #ffffff;
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+}
+
+.register-left {
+	flex: 0 0 400px;
 	padding: 40px;
-	flex-wrap: wrap;
-}
-
-.register-card {
-	background: rgba(255, 255, 255, 0.9);
-	backdrop-filter: blur(10px);
-	border-radius: 15px;
-	padding: 30px;
-	width: 400px;
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-	transition: transform 0.3s ease;
-}
-
-.register-card:hover {
-	transform: translateY(-5px);
-}
-
-.register-card h2 {
-	text-align: center;
-	margin-bottom: 30px;
-	color: #303133;
-}
-
-.verification-group {
+	background-color: #2c3e50;
 	display: flex;
-	gap: 10px;
+	flex-direction: column;
+	justify-content: center;
+	color: white;
 }
 
-.verification-img {
-	width: 120px;
-	height: 40px;
-	cursor: pointer;
+.welcome-text {
+	text-align: center;
 }
 
-/* Element UI 组件样式覆盖 */
-.el-form-item {
-	margin-bottom: 22px;
+.welcome-text h2 {
+	font-size: 36px;
+	margin-bottom: 20px;
+	font-weight: 600;
 }
 
-.el-input__inner {
-	height: 40px;
+.welcome-text p {
+	font-size: 18px;
+	opacity: 0.8;
+	letter-spacing: 1px;
 }
 
-.el-button {
-	width: 100%;
-	height: 40px;
-	border-radius: 8px;
-}
-
-/* 响应式设计 */
-@media (max-width: 1200px) {
-	.register-content {
-		padding: 20px;
-	}
-	
-	.register-card {
-		width: 100%;
-		max-width: 400px;
-	}
-}
-
-@media (max-width: 768px) {
-	.nav-header {
-		padding: 15px 20px;
-	}
-	
-	.nav-brand h1 {
-		font-size: 20px;
-	}
+.register-right {
+	flex: 1;
+	padding: 40px;
+	background: #ffffff;
 }
 
 .register-type-selector {
-	position: relative;
-	z-index: 1;
 	text-align: center;
-	padding: 20px 0;
+	margin-bottom: 30px;
 }
 
 .register-type-selector .el-radio-group {
-	background: rgba(255, 255, 255, 0.1);
-	padding: 10px;
-	border-radius: 12px;
-	backdrop-filter: blur(10px);
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
 
 .register-type-selector .el-radio-button__inner {
-	background: transparent;
+	padding: 12px 25px;
+	font-size: 15px;
 	border: none;
-	color: white;
-	padding: 12px 30px;
-	transition: all 0.3s ease;
-}
-
-.register-type-selector .el-radio-button:first-child .el-radio-button__inner {
-	border-radius: 8px 0 0 8px;
-}
-
-.register-type-selector .el-radio-button:last-child .el-radio-button__inner {
-	border-radius: 0 8px 8px 0;
+	background: #f5f7fa;
 }
 
 .register-type-selector .el-radio-button__orig-radio:checked + .el-radio-button__inner {
-	background: rgba(255, 255, 255, 0.2);
+	background-color: #2c3e50;
+	color: #ffffff;
 	box-shadow: none;
-	color: #409EFF;
 }
 
-.register-card {
-	animation: fadeIn 0.5s ease;
+/* 表单样式 */
+.el-form {
 	max-width: 500px;
 	margin: 0 auto;
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-/* 修改注册内容区域的样式 */
-.register-content {
-	display: block;
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-/* 响应式优化 */
-@media (max-width: 768px) {
-	.register-type-selector .el-radio-button__inner {
-		padding: 10px 20px;
-		font-size: 14px;
-	}
-	
-	.register-card {
-		margin: 10px;
-	}
-}
-
-/* 添加以下样式 */
-.custom-dialog {
-	border-radius: 12px;
-	overflow: hidden;
-}
-
-.custom-dialog .el-dialog__header {
-	background: linear-gradient(135deg, #00B4DB, #0083B0);
-	padding: 20px;
-	margin: 0;
-}
-
-.custom-dialog .el-dialog__title {
-	color: white;
-	font-size: 18px;
-	font-weight: 500;
-}
-
-.custom-dialog .el-dialog__body {
-	padding: 30px;
-}
-
-.info-form {
-	margin: 0;
-}
-
-.form-item {
+.el-form-item {
 	margin-bottom: 25px;
 }
 
-.form-item:last-child {
-	margin-bottom: 0;
-}
-
-.full-width {
-	width: 100%;
-}
-
-.with-unit {
-	width: 100%;
-}
-
-.with-unit .el-input-group__append {
-	background-color: #f5f7fa;
-	color: #909399;
-	padding: 0 15px;
-}
-
-.el-radio {
-	margin-right: 30px;
-}
-
-.el-radio__label {
-	font-size: 14px;
-}
-
-.dialog-footer {
-	text-align: right;
-	margin-top: 30px;
-}
-
-.dialog-footer .el-button {
-	padding: 12px 25px;
-	font-size: 14px;
-}
-
-.dialog-footer .el-button + .el-button {
-	margin-left: 15px;
-}
-
-/* 输入框样式优化 */
 .el-input__inner {
-	height: 40px;
-	line-height: 40px;
+	height: 45px;
+	border-radius: 8px;
+	border: 2px solid #edf2f7;
+	transition: all 0.3s ease;
 }
 
-.el-date-editor.el-input {
+.el-input__inner:focus {
+	border-color: #2c3e50;
+	box-shadow: 0 0 0 3px rgba(44,62,80,0.1);
+}
+
+.el-button {
 	width: 100%;
+	height: 45px;
+	font-size: 16px;
+	font-weight: 600;
+	border-radius: 8px;
+	letter-spacing: 1px;
+	transition: all 0.3s ease;
 }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-	.custom-dialog {
-		width: 90% !important;
-		margin: 0 auto;
-	}
-	
-	.el-form-item__label {
-		float: none;
-		text-align: left;
-		margin-bottom: 8px;
-	}
-	
-	.el-form-item__content {
-		margin-left: 0 !important;
-	}
+.el-button--primary {
+	background-color: #2c3e50;
+	border-color: #2c3e50;
 }
 
-/* 添加邮箱验证码相关样式 */
+.el-button--primary:hover {
+	background-color: #34495e;
+	border-color: #34495e;
+	transform: translateY(-2px);
+}
+
+/* 邮箱验证码样式 */
 .email-verification {
 	display: flex;
 	gap: 10px;
@@ -1240,17 +1107,58 @@
 
 .send-code-btn {
 	width: 120px !important;
-	padding: 0 !important;
-	font-size: 13px !important;
 }
 
-/* 在小屏幕上调整布局 */
-@media (max-width: 768px) {
+/* 弹窗样式 */
+.custom-dialog {
+	border-radius: 15px;
+}
+
+.custom-dialog .el-dialog__header {
+	background: #2c3e50;
+	padding: 20px;
+	margin: 0;
+}
+
+.custom-dialog .el-dialog__title {
+	color: white;
+}
+
+/* 响应式布局 */
+@media screen and (max-width: 1200px) {
+	.register-box {
+		width: 95%;
+		flex-direction: column;
+	}
+
+	.register-left {
+		flex: none;
+		padding: 30px;
+	}
+
+	.register-right {
+		padding: 30px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.nav-header {
+		padding: 15px 20px;
+	}
+
+	.nav-brand h1 {
+		font-size: 20px;
+	}
+
+	.register-type-selector .el-radio-button__inner {
+		padding: 10px 15px;
+		font-size: 14px;
+	}
+
 	.email-verification {
 		flex-direction: column;
-		gap: 10px;
 	}
-	
+
 	.send-code-btn {
 		width: 100% !important;
 	}
