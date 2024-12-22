@@ -1,115 +1,138 @@
 <template>
-	<div style="text-align: center;">
+	<div class="user-hub">
+		<div class="page-header">
+			<h2>个人信息管理</h2>
+			<div class="header-line"></div>
+		</div>
 
-		<el-row>
-			<el-col :span="24">
-				<div class="grid-content bg-purple-dark">
-					<label>用户信息修改</label>
-				</div>
-			</el-col>
-		</el-row>
+		<div class="info-container">
+			<!-- 基本信息部分 -->
+			<div class="info-section">
+				<h3>基本信息</h3>
+				<el-row :gutter="20">
+					<el-col :span="8">
+						<div class="info-item">
+							<label>用户名</label>
+							<el-input v-model="user.username" :readonly="true" class="info-input"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="info-item">
+							<label>性别</label>
+							<div class="gender-buttons">
+								<el-button :type="user.sex === 1 ? 'primary' : ''" @click="setSex(1)">男</el-button>
+								<el-button :type="user.sex === 0 ? 'primary' : ''" @click="setSex(0)">女</el-button>
+							</div>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="info-item">
+							<label>电话</label>
+							<el-input @blur="CheckTel()" v-model="user.tel" class="info-input"></el-input>
+						</div>
+					</el-col>
+				</el-row>
 
-		<el-row>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>用户名</label>
-					<el-input class="userHubInput" v-model="user.username" :readonly="true"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple-light">
-					<label>性别</label><br>
-					<el-button style="width: 120px;" :type="user.sex === 1 ? 'primary' : ''" @click="setSex(1)">
-						男
-					</el-button>
-					<el-button style="width: 120px;" :type="user.sex === 0 ? 'primary' : ''" @click="setSex(0)">
-						女
-					</el-button>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>电话</label>
-					<el-input class="userHubInput" @blur="CheckTel()" v-model="user.tel"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+				<el-row :gutter="20">
+					<el-col :span="8">
+						<div class="info-item">
+							<label>真实姓名</label>
+							<el-input @blur="CheckName()" v-model="user.name" class="info-input"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="info-item">
+							<label>出生日期</label>
+							<el-date-picker
+								v-model="user.birthday"
+								type="date"
+								placeholder="选择日期"
+								@blur="CheckBirthday()"
+								class="info-input">
+							</el-date-picker>
+						</div>
+					</el-col>
+					<el-col :span="8">
+						<div class="info-item">
+							<label>年龄</label>
+							<el-input v-model="user.age" :readonly="true" class="info-input"></el-input>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-row>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>真实姓名</label>
-					<el-input class="userHubInput" @blur="CheckName()" v-model="user.name"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple-light">
-					<div class="block">
-						<label>出生日期</label><br>
-						<el-date-picker style="margin-top: 7px;width: 350px;" @blur="CheckBirthday()"
-							v-model="user.birthday" type="date" placeholder="选择日期">
-						</el-date-picker>
-					</div>
-				</div>
-			</el-col>
-			<el-col :span="8">
-				<div class="grid-content bg-purple">
-					<label>年龄</label>
-					<el-input class="userHubInput" :readonly="true" v-model="user.age"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+			<!-- 身体数据部分 -->
+			<div class="info-section">
+				<h3>身体数据</h3>
+				<el-row :gutter="20">
+					<el-col :span="6">
+						<div class="info-item">
+							<label>身高(m)</label>
+							<el-input @blur="CheckHeight()" v-model="user.height" class="info-input"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="6">
+						<div class="info-item">
+							<label>体重(斤)</label>
+							<el-input @blur="CheckWeight()" v-model="user.weight" class="info-input"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="6">
+						<div class="info-item">
+							<label>BMI</label>
+							<el-input v-model="user.bmi" :readonly="true" class="info-input"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="6">
+						<div class="info-item">
+							<label>会员状态</label>
+							<el-tag :type="user.vipstatus === '是' ? 'success' : 'info'" class="vip-tag">
+								{{ user.vipstatus }}
+							</el-tag>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-row>
-			<el-col :span="5">
-				<div class="grid-content bg-purple">
-					<label>身高(m)</label>
-					<el-input class="userHubInput" @blur="CheckHeight()" v-model="user.height"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="5">
-				<div class="grid-content bg-purple-light">
-					<label>体重(斤)</label>
-					<el-input class="userHubInput" @blur="CheckWeight()" v-model="user.weight"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="5">
-				<div class="grid-content bg-purple">
-					<label>BMI</label>
-					<el-input class="userHubInput" v-model="user.bmi" :readonly="true"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="5">
-				<div class="grid-content bg-purple-light">
-					<label>账户余额</label>
-					<el-input class="userHubInput" :readonly="true" v-model="user.accountbalance"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="4">
-				<div class="grid-content bg-purple">
-					<label>是否会员</label>
-					<el-input class="userHubInput" :readonly="true" v-model="user.vipstatus"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+			<!-- 账户信息部分 -->
+			<div class="info-section">
+				<h3>账户信息</h3>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<div class="info-item">
+							<label>注册时间</label>
+							<el-input v-model="user.enrolldate" :readonly="true" class="info-input"></el-input>
+						</div>
+					</el-col>
+					<el-col :span="12">
+						<div class="info-item">
+							<label>上次登录时间</label>
+							<el-input v-model="user.lastlogindate" :readonly="true" class="info-input"></el-input>
+						</div>
+					</el-col>
+				</el-row>
 
-		<el-row>
-			<el-col :span="12">
-				<div class="grid-content bg-purple">
-					<label>注册时间</label>
-					<el-input class="userHubInput" :readonly="true" v-model="user.enrolldate"></el-input>
-				</div>
-			</el-col>
-			<el-col :span="12">
-				<div class="grid-content bg-purple-light">
-					<label style="text-align: center;">上一次登录时间</label>
-					<el-input class="userHubInput" :readonly="true" v-model="user.lastlogindate"></el-input>
-				</div>
-			</el-col>
-		</el-row>
+				<el-row>
+					<el-col :span="24">
+						<div class="info-item balance-item">
+							<label>账户余额</label>
+							<span class="balance-amount">¥ {{ user.accountbalance }}</span>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 
-		<el-button style="width: 120px;" @click="updateUser()" :disabled="!userShow" type="success">修改</el-button>
-
+			<div class="actions">
+				<el-button 
+					type="primary" 
+					@click="updateUser()" 
+					:disabled="!userShow"
+					icon="el-icon-check"
+					class="submit-btn">
+					保存修改
+				</el-button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -270,53 +293,125 @@
 </script>
 
 <style scoped>
-	.el-row {
-		margin-bottom: 20px;
+.user-hub {
+	padding: 20px;
+	background-color: #f5f7fa;
+	min-height: calc(100vh - 120px);
+}
 
-		&:last-child {
-			margin-bottom: 0;
-		}
+.page-header {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.page-header h2 {
+	color: #303133;
+	font-size: 24px;
+	font-weight: 600;
+	margin: 0;
+	padding-bottom: 15px;
+}
+
+.header-line {
+	width: 50px;
+	height: 3px;
+	background: #409EFF;
+	margin: 0 auto;
+}
+
+.info-container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.info-section {
+	background: #fff;
+	border-radius: 8px;
+	padding: 25px;
+	margin-bottom: 20px;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h3 {
+	color: #303133;
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ebeef5;
+}
+
+.info-item {
+	margin-bottom: 20px;
+}
+
+.info-item label {
+	display: block;
+	color: #606266;
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
+.info-input {
+	width: 100%;
+}
+
+.info-input :deep(.el-input__inner) {
+	height: 40px;
+	line-height: 40px;
+}
+
+.gender-buttons {
+	display: flex;
+	gap: 10px;
+}
+
+.gender-buttons .el-button {
+	flex: 1;
+	height: 40px;
+}
+
+.vip-tag {
+	font-size: 14px;
+	padding: 8px 15px;
+}
+
+.balance-item {
+	text-align: center;
+}
+
+.balance-amount {
+	font-size: 24px;
+	color: #67C23A;
+	font-weight: bold;
+}
+
+.actions {
+	text-align: center;
+	margin-top: 30px;
+}
+
+.submit-btn {
+	width: 180px;
+	height: 45px;
+	font-size: 16px;
+}
+
+.el-row {
+	margin-bottom: 20px;
+	&:last-child {
+		margin-bottom: 0;
 	}
+}
 
+/* 响应式布局 */
+@media screen and (max-width: 768px) {
 	.el-col {
-		border-radius: 4px;
+		width: 100% !important;
 	}
-
-	.bg-purple-dark {
-		padding-top: 20px;
-		;
-		text-align: center;
-		height: 70px;
-		background: #99a9bf;
+	
+	.info-section {
+		padding: 15px;
 	}
-
-	.userHubInput {
-		margin-top: 7px;
-	}
-
-	.bg-purple {
-		padding-top: 5px;
-		text-align: center;
-		margin-left: 5px;
-		height: 70px;
-		background: #d3dce6;
-	}
-
-	.bg-purple-light {
-		padding-top: 5px;
-		text-align: center;
-		margin-left: 5px;
-		height: 70px;
-		background: #e5e9f2;
-	}
-
-	.grid-content {
-		border-radius: 4px;
-		min-height: 36px;
-	}
-
-	.row-bg {
-		padding: 10px 0;
-		background-color: #f9fafc;
-	}
+}
 </style>

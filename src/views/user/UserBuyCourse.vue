@@ -1,67 +1,109 @@
 <template>
-	<div>
-		<el-row>
-			<el-col :span="24">
-				<div class="grid-content bg-purple-dark" style="display: flex; text-align: center;">
-					<div style="flex: 1;">
-						<el-autocomplete popper-class="my-autocomplete" v-model="name" :fetch-suggestions="querySearch"
-							placeholder="请输入课程名称" @select="handleSelect" style="width: 500px;"
-							@click.native.prevent="SearchAllCourse()"
-							@keydown.enter.native.prevent="SearchCourseByName()">
-							<i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick">
-							</i>
-							<template slot-scope="{ item }">
-								<div class="name">{{ item.courseName }}</div>
-								<span style="font-size: 12px;color: #b4b4b4;">{{ item.coachName }}</span>
-							</template>
-						</el-autocomplete>
-						<el-button style="margin-left: 10px;" type="primary" icon="el-icon-search"
-							@click="SearchCourseByName()">搜索</el-button>
-						<span style="margin-left: 100px;color: #FFFF00;">余额不足?</span>
-						<el-button style="margin-left: 10px;" type="success" @click="recharge()">充值</el-button>
+	<div class="course-container">
+		<!-- 搜索栏部分 -->
+		<div class="search-section">
+			<div class="search-wrapper">
+				<el-autocomplete
+					class="search-input"
+					popper-class="my-autocomplete"
+					v-model="name"
+					:fetch-suggestions="querySearch"
+					placeholder="搜索课程..."
+					@select="handleSelect"
+					@click.native.prevent="SearchAllCourse()"
+					@keydown.enter.native.prevent="SearchCourseByName()">
+					<i class="el-icon-search el-input__icon" slot="prefix"></i>
+					<template slot-scope="{ item }">
+						<div class="suggestion-item">
+							<div class="course-name">{{ item.courseName }}</div>
+							<div class="coach-name">{{ item.coachName }}</div>
+						</div>
+					</template>
+				</el-autocomplete>
+				<el-button type="primary" icon="el-icon-search" @click="SearchCourseByName()">搜索</el-button>
+			</div>
+			
+			<div class="balance-section">
+				<span class="balance-tip">余额不足?</span>
+				<el-button type="success" icon="el-icon-wallet" @click="recharge()">充值</el-button>
+			</div>
+		</div>
+
+		<!-- 课程列表部分 -->
+		<div class="course-list">
+			<el-card v-for="(item, index) in resultcourse" :key="index" class="course-card">
+				<div class="course-content">
+					<div class="course-image">
+						<img :src="'http://localhost:8081/util/download?name=' + item.image" :alt="item.name">
 					</div>
-
-				</div>
-			</el-col>
-		</el-row>
-
-		<el-row v-for="(item,index) in resultcourse" :key="index">
-			<el-col :span="18">
-				<div class="grid-content bg-purple" style="display: flex;">
-					<div style="margin-right: 20px;">
-						<img :src="'http://localhost:8081/util/download?name=' + item.image" alt="图片"
-							style="width: 200px; height: 200px;">
+					
+					<div class="course-info">
+						<h3 class="course-title">{{item.name}}</h3>
+						<el-descriptions :column="2" class="course-details">
+							<el-descriptions-item label="上课地点">
+								<i class="el-icon-location"></i> {{item.place}}
+							</el-descriptions-item>
+							<el-descriptions-item label="适用人群">
+								<i class="el-icon-user"></i> {{item.applicationgroup}}
+							</el-descriptions-item>
+							<el-descriptions-item label="类型">
+								<i class="el-icon-collection-tag"></i> {{item.type}}
+							</el-descriptions-item>
+							<el-descriptions-item label="课程时长">
+								<i class="el-icon-time"></i> {{item.coursetime}}
+							</el-descriptions-item>
+						</el-descriptions>
+						
+						<div class="course-description">
+							<p>{{item.description}}</p>
+						</div>
+						
+						<div class="price-section">
+							<div class="price-info">
+								<div class="original-price">
+									<span class="label">原价：</span>
+									<span class="amount">¥{{item.price}}</span>
+								</div>
+								<div class="vip-price">
+									<span class="label">会员价：</span>
+									<span class="amount">¥{{item.price * 0.8}}</span>
+									<el-tag size="small" type="success">会员优惠</el-tag>
+								</div>
+							</div>
+							
+							<div class="action-buttons">
+								<el-button 
+									:type="item.isCollect === 1 ? 'warning' : 'info'"
+									icon="el-icon-star-off"
+									circle
+									@click="toggleStar(item)"
+									:title="item.isCollect === 1 ? '取消收藏' : '收藏课程'">
+								</el-button>
+								<el-button 
+									type="primary" 
+									:disabled="item.isPurchase === 1"
+									@click="userPurchaseCourse(item.id, item.price, item)">
+									{{ item.isPurchase === 1 ? '已购买' : '立即购买' }}
+								</el-button>
+							</div>
+						</div>
 					</div>
-					<el-descriptions :title="item.name" :column="3" :size="size" style="width: 560px;margin-top: 10px;">
-						<el-descriptions-item label="上课地点">{{item.place}}</el-descriptions-item>
-						<el-descriptions-item label="适用人群">{{item.applicationgroup}}</el-descriptions-item>
-						<el-descriptions-item label="类型">{{item.type}}</el-descriptions-item>
-						<el-descriptions-item label="价格">{{item.price}}</el-descriptions-item>
-						<el-descriptions-item label="会员价格">
-							<el-tag size="medium">{{item.price * 0.8}}</el-tag>
-						</el-descriptions-item>
-						<el-descriptions-item label="课程时长">{{item.coursetime}}</el-descriptions-item>
-						<el-descriptions-item label="描述">{{item.description}}</el-descriptions-item>
-					</el-descriptions><br>
 				</div>
-			</el-col>
-			<el-col :span="6">
-				<div class="grid-content bg-purple-light" style="display: flex;height: 205px;">
-					<i v-if="item.isCollect === 1" class="el-icon-star-on"
-						style="margin-top: 90px; margin-left: 40px; cursor: pointer;" @click="toggleStar(item)" title="点击取消收藏"></i>
-					<i v-else class="el-icon-star-off" style="margin-top: 90px; margin-left: 40px; cursor: pointer;"
-						@click="toggleStar(item)"  title="点击收藏"></i>
-					<el-button type="success" style="height: 40px;width: 80px;margin-top: 80px;margin-left: 60px;"
-						:disabled="item.isPurchase === 1"
-						@click="userPurchaseCourse(item.id,item.price,item)">购买</el-button>
-				</div>
-			</el-col>
+			</el-card>
+		</div>
 
-		</el-row>
-		<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-			:page-sizes="[3, 6, 9, 12]" :page-size="3" layout="total, sizes, prev, pager, next, jumper" :total="total">
-		</el-pagination>
-
+		<!-- 分页部分 -->
+		<div class="pagination-section">
+			<el-pagination
+				@size-change="handleSizeChange"
+				@current-change="handleCurrentChange"
+				:current-page="currentPage"
+				:page-sizes="[3, 6, 9, 12]"
+				:page-size="3"
+				layout="total, sizes, prev, pager, next, jumper"
+				:total="total">
+			</el-pagination>
+		</div>
 	</div>
 </template>
 
@@ -252,54 +294,190 @@
 	}
 </script>
 
-<style scoped>
-	.el-row {
-		margin-bottom: 20px;
+<style lang="less" scoped>
+.course-container {
+	padding: 20px;
+	background-color: #f5f7fa;
+	min-height: calc(100vh - 120px);
+}
 
-		&:last-child {
-			margin-bottom: 0;
+.search-section {
+	background: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.search-wrapper {
+	display: flex;
+	gap: 10px;
+	flex: 1;
+	max-width: 600px;
+	
+	.search-input {
+		width: 100%;
+	}
+}
+
+.balance-section {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	
+	.balance-tip {
+		color: #e6a23c;
+		font-weight: 500;
+	}
+}
+
+.course-list {
+	display: grid;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.course-card {
+	border-radius: 8px;
+	overflow: hidden;
+	transition: all 0.3s;
+	
+	&:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.course-content {
+	display: flex;
+	gap: 20px;
+}
+
+.course-image {
+	width: 240px;
+	height: 240px;
+	border-radius: 8px;
+	overflow: hidden;
+	
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s;
+		
+		&:hover {
+			transform: scale(1.05);
 		}
 	}
+}
 
-	.el-col {
-		border-radius: 4px;
+.course-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.course-title {
+	font-size: 20px;
+	color: #303133;
+	margin: 0 0 15px;
+}
+
+.course-details {
+	margin-bottom: 15px;
+	
+	:deep(.el-descriptions-item__label) {
+		color: #909399;
 	}
-
-	.bg-purple-dark {
-		background: #99a9bf;
+	
+	i {
+		margin-right: 5px;
 	}
+}
 
-	.bg-purple {
-		background: #d3dce6;
+.course-description {
+	color: #606266;
+	line-height: 1.6;
+	margin-bottom: 15px;
+	flex: 1;
+}
+
+.price-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding-top: 15px;
+	border-top: 1px solid #ebeef5;
+}
+
+.price-info {
+	.original-price {
+		color: #909399;
+		text-decoration: line-through;
+		margin-bottom: 5px;
 	}
-
-	.bg-purple-light {
-		background: #e5e9f2;
-	}
-
-	.grid-content {
-		border-radius: 4px;
-		min-height: 36px;
-	}
-
-	.row-bg {
-		padding: 10px 0;
-		background-color: #f9fafc;
-	}
-
-	.my-autocomplete {
-		li {
-			line-height: normal;
-			padding: 7px;
-
-			.name {
-				text-overflow: ellipsis;
-				overflow: hidden;
-			}
-
-			.highlighted .addr {
-				color: #ddd;
-			}
+	
+	.vip-price {
+		color: #f56c6c;
+		font-size: 20px;
+		font-weight: bold;
+		
+		.el-tag {
+			margin-left: 10px;
 		}
 	}
+	
+	.label {
+		color: #909399;
+		font-size: 14px;
+	}
+}
+
+.action-buttons {
+	display: flex;
+	gap: 10px;
+}
+
+.pagination-section {
+	display: flex;
+	justify-content: center;
+	margin-top: 30px;
+}
+
+.suggestion-item {
+	.course-name {
+		font-size: 14px;
+		color: #303133;
+	}
+	
+	.coach-name {
+		font-size: 12px;
+		color: #909399;
+	}
+}
+
+/* 响��式布局 */
+@media screen and (max-width: 768px) {
+	.course-content {
+		flex-direction: column;
+	}
+	
+	.course-image {
+		width: 100%;
+		height: 200px;
+	}
+	
+	.price-section {
+		flex-direction: column;
+		gap: 15px;
+	}
+	
+	.action-buttons {
+		width: 100%;
+		justify-content: flex-end;
+	}
+}
 </style>

@@ -1,65 +1,102 @@
 <template>
-	<div>
-		<div>
-			<el-row>
-				<el-col :span="24">
-					<div class="grid-content bg-purple-dark" style="display: flex; align-items: center;">
-						<img style="width: 100px; height: 100px;" :src="logoLink" alt="Logo">
-						<div style="margin-left: 20px;">
-							<h2 style="color: #f2a53f;">FitHub-Plus会员</h2>
-							<h4 style="color: #409EFF;margin-top: 10px;">开通立享8大会员专属权限，快人一步练成好身体!好身材!</h4>
-						</div>
-					</div>
-				</el-col>
+	<div class="vip-container">
+		<!-- VIP 头部 -->
+		<div class="vip-header">
+			<div class="header-content">
+				<img :src="logoLink" alt="Logo" class="vip-logo">
+				<div class="header-text">
+					<h1>FitHub-Plus 会员</h1>
+					<p>开通立享8大会员专属权限，快人一步练成好身体！好身材！</p>
+				</div>
+			</div>
+		</div>
 
-			</el-row>
-			<el-row>
-				<el-col :span="12">
-					<div class="grid-content bg-purple">
-						<el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
-							<el-table-column prop="privilege" label="会员专属特权" width="180">
-							</el-table-column>
-							<el-table-column prop="PlusVip" label="Plus会员" width="180">
-							</el-table-column>
-							<el-table-column prop="noVip" label="无会员">
-							</el-table-column>
-						</el-table>
+		<div class="vip-content">
+			<!-- 特权展示部分 -->
+			<div class="privileges-section">
+				<h2>会员特权对比</h2>
+				<el-table
+					:data="tableData"
+					style="width: 100%"
+					:row-class-name="tableRowClassName"
+					class="privilege-table">
+					<el-table-column
+						prop="privilege"
+						label="会员专属特权"
+						width="200">
+					</el-table-column>
+					<el-table-column
+						prop="PlusVip"
+						label="Plus会员"
+						width="200">
+						<template slot-scope="scope">
+							<span class="vip-feature">{{ scope.row.PlusVip }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="noVip"
+						label="普通用户">
+						<template slot-scope="scope">
+							<span class="normal-feature">{{ scope.row.noVip }}</span>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+
+			<!-- 会员套餐部分 -->
+			<div class="plans-section">
+				<h2>会员套餐</h2>
+				<div class="plan-cards">
+					<!-- 年度会员 -->
+					<div class="plan-card">
+						<div class="plan-header">
+							<h3>年度会员</h3>
+							<div class="plan-price">
+								<span class="price">¥{{yearmoney}}</span>
+								<span class="per-day">¥1.37/天</span>
+							</div>
+							<div class="plan-duration">365天</div>
+						</div>
+						<el-button type="primary" @click="purchasePlusVipYear()" class="purchase-btn">立即开通</el-button>
 					</div>
-				</el-col>
-				<el-col :span="6">
-					<div class="grid-content">
-						<div style="width: 265px;height: 160px;text-align: center;border: 2px solid #FF0000;border-radius: 10px;">
-							<h5 style="padding-top: 20px;">365天</h5><br>
-							<h1 style="color: #FF0000;">￥{{yearmoney}}</h1><br>
-							<h5>仅￥1.37/天</h5><br>
+
+					<!-- 半年会员 -->
+					<div class="plan-card">
+						<div class="plan-header">
+							<h3>半年会员</h3>
+							<div class="plan-price">
+								<span class="price">¥{{seasonmoney}}</span>
+								<span class="per-day">¥2.21/天</span>
+							</div>
+							<div class="plan-duration">180天</div>
 						</div>
-						<div style="width: 265px;height: 160px;text-align: center;border: 2px solid #FF0000;border-radius: 10px;margin-top: 10px;">
-							<h5 style="padding-top: 20px;">180天</h5><br>
-							<h1 style="color: #FF0000;">￥{{seasonmoney}}</h1><br>
-							<h5>仅￥2.21/天</h5><br>
-						</div>
-						<div style="width: 265px;height: 160px;text-align: center;border: 2px solid #FF0000;border-radius: 10px;margin-top: 10px;">
-							<h5 style="padding-top: 10px;">包月</h5><br>
-							<el-input-number v-model="num" :step="30" :min="30" :max="90" @change="handleChange"></el-input-number>
-							<h1 style="padding-top: 3px; color: #FF0000;height: 20px;">￥{{money}}</h1><br>
-							<h5>仅￥2.63/天</h5><br>
-						</div>
+						<el-button type="primary" @click="purchasePlusVipSeason()" class="purchase-btn">立即开通</el-button>
 					</div>
-				</el-col>
-				<el-col :span="6">
-					<div class="grid-content">
-						<div style="width: 265px;height: 160px;text-align: center;" >
-							<el-button @click="purchasePlusVipYear()" type="success" style="margin-top: 60px;width: 80px;height: 40px;" >购买</el-button>
+
+					<!-- 月度会员 -->
+					<div class="plan-card">
+						<div class="plan-header">
+							<h3>月度会员</h3>
+							<div class="plan-price">
+								<span class="price">¥{{money}}</span>
+								<span class="per-day">¥2.63/天</span>
+							</div>
+							<div class="duration-selector">
+								<el-input-number 
+									v-model="num" 
+									:step="30" 
+									:min="30" 
+									:max="90" 
+									@change="handleChange"
+									controls-position="right">
+								</el-input-number>
+								<span class="days-label">天</span>
+							</div>
 						</div>
-						<div style="width: 265px;height: 160px;text-align: center;" >
-							<el-button @click="purchasePlusVipSeason()" type="success" style="margin-top: 60px;width: 80px;height: 40px;" >购买</el-button>
-						</div>
-						<div style="width: 265px;height: 160px;text-align: center;" >
-							<el-button @click="purchasePlusVipDay()" type="success" style="margin-top: 60px;width: 80px;height: 40px;" >购买</el-button>
-						</div>
+						<el-button type="primary" @click="purchasePlusVipDay()" class="purchase-btn">立即开通</el-button>
 					</div>
-				</el-col>
-			</el-row>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -219,45 +256,170 @@
 </script>
 
 <style scoped>
+	.vip-container {
+		padding: 20px;
+		background-color: #f5f7fa;
+		min-height: calc(100vh - 120px);
+	}
+
+	.vip-header {
+		background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+		border-radius: 8px;
+		padding: 30px;
+		margin-bottom: 30px;
+		color: #fff;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.header-content {
+		display: flex;
+		align-items: center;
+		gap: 30px;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.vip-logo {
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.header-text h1 {
+		font-size: 28px;
+		margin: 0;
+		color: #ffd700;
+		margin-bottom: 10px;
+	}
+
+	.header-text p {
+		font-size: 16px;
+		margin: 0;
+		opacity: 0.9;
+	}
+
+	.vip-content {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.privileges-section, .plans-section {
+		background: #fff;
+		border-radius: 8px;
+		padding: 30px;
+		margin-bottom: 30px;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	h2 {
+		color: #303133;
+		font-size: 24px;
+		margin: 0 0 20px;
+		padding-bottom: 15px;
+		border-bottom: 1px solid #ebeef5;
+	}
+
+	.privilege-table {
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	.vip-feature {
+		color: #67c23a;
+		font-weight: 500;
+	}
+
+	.normal-feature {
+		color: #909399;
+	}
+
+	.plan-cards {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+		margin-top: 20px;
+	}
+
+	.plan-card {
+		background: #fff;
+		border-radius: 8px;
+		padding: 25px;
+		text-align: center;
+		border: 1px solid #ebeef5;
+		transition: all 0.3s;
+	}
+
+	.plan-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	}
+
+	.plan-header h3 {
+		color: #303133;
+		font-size: 20px;
+		margin: 0 0 15px;
+	}
+
+	.plan-price {
+		margin: 15px 0;
+	}
+
+	.price {
+		font-size: 32px;
+		color: #f56c6c;
+		font-weight: bold;
+	}
+
+	.per-day {
+		font-size: 14px;
+		color: #909399;
+		margin-left: 5px;
+	}
+
+	.plan-duration {
+		font-size: 16px;
+		color: #606266;
+		margin: 10px 0;
+	}
+
+	.duration-selector {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		margin: 15px 0;
+	}
+
+	.days-label {
+		color: #606266;
+	}
+
+	.purchase-btn {
+		width: 100%;
+		height: 40px;
+		margin-top: 15px;
+	}
+
+	/* 表格样式优化 */
 	.el-table .warning-row {
-		background: oldlace;
+		background: #fdf6ec;
 	}
 
 	.el-table .success-row {
 		background: #f0f9eb;
 	}
 
-	.el-row {
-		margin-bottom: 20px;
-
-		&:last-child {
-			margin-bottom: 0;
+	/* 响应式布局 */
+	@media screen and (max-width: 768px) {
+		.plan-cards {
+			grid-template-columns: 1fr;
 		}
-	}
-
-	.el-col {
-		border-radius: 4px;
-	}
-
-	.bg-purple-dark {
-		background: #99a9bf;
-	}
-
-	.bg-purple {
-		background: #d3dce6;
-	}
-
-	.bg-purple-light {
-		background: #e5e9f2;
-	}
-
-	.grid-content {
-		border-radius: 4px;
-		min-height: 36px;
-	}
-
-	.row-bg {
-		padding: 10px 0;
-		background-color: #f9fafc;
+		
+		.header-content {
+			flex-direction: column;
+			text-align: center;
+		}
 	}
 </style>
