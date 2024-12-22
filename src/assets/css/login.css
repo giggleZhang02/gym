@@ -1,0 +1,200 @@
+.background {
+	background: url(../images/background.jpg) no-repeat center;
+	background-size: cover;
+	height: 100vh;
+	width: 100%;
+}
+
+
+#context {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -10;
+	object-fit: cover;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--clr: rgb(129, 154, 213);
+	--b-clr1: rgb(161, 100, 252);
+	--b-clr2: rgb(250, 139, 160);
+}
+
+.container1::before {
+	content: '';
+	width: 300px;
+	height: 500px;
+	background: linear-gradient(transparent, transparent, var(--b-clr1));
+	position: absolute;
+	animation: myAnimate 4s linear infinite;
+	top: -50%;
+	left: 50%;
+	transform-origin: bottom left;
+}
+
+.container1::after {
+	content: '';
+	width: 300px;
+	height: 500px;
+	background: linear-gradient(var(--b-clr2), transparent, transparent);
+	position: absolute;
+	animation: myAnimate 4s linear infinite;
+	top: 50%;
+	left: -50%;
+	transform-origin: top right;
+}
+
+@keyframes myAnimate {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.content {
+	width: 390px;
+	height: 490px;
+	background: var(--clr);
+	border-radius: 20px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	z-index: 2;
+}
+
+.content b {
+	color: var(--b-clr1)
+}
+
+.content small {
+	color: var(--b-clr2)
+}
+
+
+.container {
+	position: absolute;
+	left: 60%;
+	top: 52%;
+	transform: translate(-50%, -50%);
+	width: 75%;
+	height: 550px;
+	margin-top: 20px;
+	border-radius: 20px;
+}
+
+.item {
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #fff;
+	background: transparent;
+	padding: 80px;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+}
+
+.item .logo {
+	color: #fff;
+	font-size: 50px;
+}
+
+.text-item h2 {
+	font-size: 40px;
+	line-height: 1;
+}
+
+.text-item p {
+	font-size: 20px;
+	margin: 20px 0;
+}
+
+.social-icon a i {
+	color: #fff;
+	font-size: 30px;
+	margin-left: 10px;
+	cursor: pointer;
+	transition: .5s ease;
+}
+
+.social-icon a:hover i {
+	transform: scale(1.2);
+}
+
+#login {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 400px;
+	right: 0;
+	margin: auto;
+	background-color: rgba(255, 255, 255, 0.5);
+	width: 400px;
+	height: 500px;
+	text-align: center;
+}
+
+.container1 {
+	position: absolute;
+	width: 400px;
+	height: 500px;
+	background: #969595;
+	border-radius: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+#login_hello {
+	color: #b5ee03;
+	margin-top: 10px;
+	font-size: 50px;
+}
+
+
+#login_msg {
+	color: #b5ee03;
+	margin-top: 10px;
+	font-size: 20px;
+}
+
+.login_button {
+	border-radius: 10px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	font-size: 16px;
+	outline: none;
+	width: 76%;
+	background-color: burlywood;
+	margin-top: 5px;
+}
+
+#username {
+	border-radius: 10px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	font-size: 16px;
+	outline: none;
+	width: 76%;
+}
+
+#password {
+	border-radius: 10px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	font-size: 16px;
+	outline: none;
+	width: 76%;
+}

@@ -1,0 +1,90 @@
+.RegisterBackground {
+	/* background: url(../images/fit.jpg) no-repeat center; */
+	background-size: cover;
+	height: 100vh;
+	width: 100%;
+}
+
+#navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 60px;
+	background-color: yellow;
+}
+
+#logo {
+	float: left;
+	margin-left: 100px;
+	margin-top: 10px;
+	height: 40px;
+}
+
+#center {
+	height: 60px;
+	padding-top: 15px;
+	text-align: center;
+}
+
+#link {
+	float: right;
+	margin-right: 100px;
+	padding-top: 10px;
+}
+
+#content{
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	align-items: center;
+}
+
+#left {
+	width: 29%;
+	height: 600px;
+	margin-top: 20px;
+	margin-left: 20px;
+	background-color: rgba(255, 228, 196, 0.5);
+	/* 使用 rgba() 函数设置颜色和透明度 */
+}
+
+#main {
+	width: 29%;
+	height: 600px;
+	margin-top: 20px;
+	background-color: rgba(255, 228, 196, 0.5);
+}
+
+#right {
+	width: 29%;
+	height: 600px;
+	margin-top: 20px;
+	margin-right: 20px;
+	background-color: rgba(255, 228, 196, 0.5);
+}
+
+.leftinput {
+	padding-top: 20px;
+	width: 80%;
+	height: 50px;
+	text-align: center;
+}
+
+.maininput{
+	padding-top: 20px;
+	width: 80%;
+	height: 50px;
+	text-align: center;
+	color: yellow;
+}
+
+#verificationImage {
+	margin-top: 10px;
+	width: 100px;
+	height: 50px;
+}
+
+#security {
+	width: 48%;
+}
