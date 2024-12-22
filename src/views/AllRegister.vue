@@ -11,19 +11,10 @@
 			<router-link to="/" class="nav-link">已有账号？登录</router-link>
 		</div>
 
-		<!-- 注册类型选择 -->
-		<div class="register-type-selector">
-			<el-radio-group v-model="currentType" size="large">
-				<el-radio-button label="user">用户注册</el-radio-button>
-				<el-radio-button label="coach">教练注册</el-radio-button>
-				<el-radio-button label="admin">管理员注册</el-radio-button>
-			</el-radio-group>
-		</div>
-
 		<!-- 注册表单区域 -->
 		<div class="register-content">
 			<!-- 管理员注册 -->
-			<div class="register-card admin-card" v-if="currentType === 'admin'">
+			<div class="register-card admin-card">
 				<h2>管理员注册</h2>
 				<el-form ref="form" :model="admin" label-width="80px">
 					<el-form-item label="密钥">
@@ -68,7 +59,7 @@
 			</div>
 
 			<!-- 用户注册 -->
-			<div class="register-card user-card" v-if="currentType === 'user'">
+			<div class="register-card user-card">
 				<h2>用户注册</h2>
 				<el-form ref="form" :model="user" label-width="80px">
 					<!-- 用户注册表单内容 -->
@@ -114,7 +105,7 @@
 			</div>
 
 			<!-- 教练注册 -->
-			<div class="register-card coach-card" v-if="currentType === 'coach'">
+			<div class="register-card coach-card">
 				<h2>教练注册</h2>
 				<el-form ref="form" :model="coach" label-width="80px">
 					<!-- 教练注册表单内容 -->
@@ -212,8 +203,7 @@
 					tel: '',
 					height: '',
 					weight: '',
-				},
-				currentType: 'user', // 默认显示用户注册
+				}
 			}
 		},
 		mounted() {
@@ -287,7 +277,7 @@
 			AgainHintPassword() {
 				this.$notify({
 					title: '温馨提示',
-					message: '两次填写密码不一致',
+					message: '两次密码不一致',
 					position: 'top-left'
 				});
 			},
@@ -829,79 +819,6 @@
 	
 	.nav-brand h1 {
 		font-size: 20px;
-	}
-}
-
-.register-type-selector {
-	position: relative;
-	z-index: 1;
-	text-align: center;
-	padding: 20px 0;
-}
-
-.register-type-selector .el-radio-group {
-	background: rgba(255, 255, 255, 0.1);
-	padding: 10px;
-	border-radius: 12px;
-	backdrop-filter: blur(10px);
-}
-
-.register-type-selector .el-radio-button__inner {
-	background: transparent;
-	border: none;
-	color: white;
-	padding: 12px 30px;
-	transition: all 0.3s ease;
-}
-
-.register-type-selector .el-radio-button:first-child .el-radio-button__inner {
-	border-radius: 8px 0 0 8px;
-}
-
-.register-type-selector .el-radio-button:last-child .el-radio-button__inner {
-	border-radius: 0 8px 8px 0;
-}
-
-.register-type-selector .el-radio-button__orig-radio:checked + .el-radio-button__inner {
-	background: rgba(255, 255, 255, 0.2);
-	box-shadow: none;
-	color: #409EFF;
-}
-
-.register-card {
-	animation: fadeIn 0.5s ease;
-	max-width: 500px;
-	margin: 0 auto;
-}
-
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-/* 修改注册内容区域的样式 */
-.register-content {
-	display: block;
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-/* 响应式优化 */
-@media (max-width: 768px) {
-	.register-type-selector .el-radio-button__inner {
-		padding: 10px 20px;
-		font-size: 14px;
-	}
-	
-	.register-card {
-		margin: 10px;
 	}
 }
 </style>
